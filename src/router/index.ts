@@ -1,10 +1,11 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import LandingView from '../views/layout/LandingView.vue';
-import AdminView from '../views/layout/PanelAdminView.vue';
-import LoginView from '../views/auth/LoginView.vue';
-import RegisterView from '../views/auth/RegisterView.vue';
-import ContactView from '../views/landing/ContactView.vue';
-import AboutView from '../views/landing/AboutView.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+import LandingView from '../views/layout/LandingView.vue'
+import AdminView from '../views/layout/PanelAdminView.vue'
+import LoginView from '../views/auth/LoginView.vue'
+import RegisterView from '../views/auth/RegisterView.vue'
+import ContactView from '../views/landing/ContactView.vue'
+import AboutView from '../views/landing/AboutView.vue'
+import Admin2View from '@/views/layout/AdminView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +26,11 @@ const router = createRouter({
       component: AboutView
     },
     {
+      path: '/admin2',
+      name: 'admin2',
+      component: Admin2View
+    },
+    {
       path: '/admin',
       name: 'admin',
       component: AdminView
@@ -40,6 +46,6 @@ const router = createRouter({
       component: RegisterView
     }
   ]
-});
+})
 
-export default router;
+export default router
