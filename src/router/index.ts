@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import LandingView from '../views/layout/LandingView.vue';
-import AdminView from '../views/layout/PanelAdminView.vue';
+import LandingView from '../views/layout/LandingLayout.vue';
+import AdminView from '../views/layout/AdminLayout.vue';
 import LoginView from '../views/auth/LoginView.vue';
 import RegisterView from '../views/auth/RegisterView.vue';
 import ContactView from '../views/landing/ContactView.vue';
@@ -11,23 +11,54 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
+      name: 'Home',
       component: LandingView
     },
     {
       path: '/contact',
-      name: 'contact',
+      name: 'Contact',
       component: ContactView
     },
     {
       path: '/about',
-      name: 'about',
+      name: 'About',
       component: AboutView
     },
     {
       path: '/admin',
-      name: 'admin',
-      component: AdminView
+      component: AdminView,
+      children: [
+        {
+          path: '',
+          name: 'Dashboard',
+          component: () => import('../views/admin/DashboardView.vue')
+        },
+        {
+          path: 'products',
+          name: 'Products',
+          component: () => import('../views/admin/ProductView.vue')
+        },
+        {
+          path: 'categories',
+          name: 'Categories',
+          component: () => import('../views/admin/CategoryView.vue')
+        },
+        {
+          path: 'users',
+          name: 'Users',
+          component: () => import('../views/admin/UserView.vue')
+        },
+        {
+          path: 'roles',
+          name: 'Roles',
+          component: () => import('../views/admin/RoleView.vue')
+        },
+        {
+          path: 'settings',
+          name: 'Settings',
+          component: () => import('../views/admin/SettingView.vue')
+        }
+      ]
     },
     {
       path: '/login',
