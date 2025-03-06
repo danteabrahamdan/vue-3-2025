@@ -46,5 +46,21 @@ export default definePreset(Aura, {
         }
       }
     }
+  },
+  extend: {
+    variables: {
+      size: {
+        sm: '0.8rem', // Ajuste preciso del tamaño pequeño
+        md: '0.75rem', // Ajuste preciso del tamaño mediano
+        lg: '1rem' // Ajuste preciso del tamaño grande
+        // ... ajusta otros tamaños según sea necesario ...
+      },
+      spacing: {
+        sm: '0.4rem', // Ajuste preciso del espaciado pequeño
+        md: '0.75rem', // Ajuste preciso del espaciado mediano
+        lg: '1rem' // Ajuste preciso del espaciado grande
+        // ... ajusta otros espaciados según sea necesario ...
+      }
+    }
   }
 });

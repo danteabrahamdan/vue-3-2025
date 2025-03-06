@@ -18,32 +18,35 @@
       </button>
     </div>
 
-    <!-- Navigation Menu -->
-    <div class="sidebar-content overflow-y-auto h-[calc(100%-60px)]">
-      <!-- Home Section -->
-      <nav-section title="Home" :items="menuItems" @select-item="$emit('close')" />
+    <scroll-bar>
+      <!-- Navigation Menu -->
+      <div class="sidebar-content overflow-y-auto h-[calc(100%-60px)]">
+        <!-- Home Section -->
+        <nav-section title="Home" :items="menuItems" @select-item="$emit('close')" />
 
-      <!-- Options Section -->
-      <nav-section title="Options" :items="appsItems" @select-item="$emit('close')" />
+        <!-- Options Section -->
+        <nav-section title="Options" :items="appsItems" @select-item="$emit('close')" />
 
-      <!-- Home Section -->
-      <nav-section title="Settings" :items="settingItems" @select-item="$emit('close')" />
+        <!-- Home Section -->
+        <nav-section title="Settings" :items="settingItems" @select-item="$emit('close')" />
 
-      <!-- PAGES Section -->
-      <nav-section
-        title="PAGES"
-        :items="pagesItems"
-        :active-submenu="activeSubmenu"
-        @toggle-submenu="toggleSubmenu"
-        @select-item="$emit('close')"
-      />
-    </div>
+        <!-- PAGES Section -->
+        <nav-section
+          title="PAGES"
+          :items="pagesItems"
+          :active-submenu="activeSubmenu"
+          @toggle-submenu="toggleSubmenu"
+          @select-item="$emit('close')"
+        />
+      </div>
+    </scroll-bar>
   </aside>
 </template>
 
 <script setup lang="ts">
 import { ref, defineEmits, defineProps } from 'vue';
 import NavSection from './NavSection.vue';
+import ScrollBar from '@/components/shared/ScrollBar.vue';
 
 interface Props {
   isOpen: boolean;

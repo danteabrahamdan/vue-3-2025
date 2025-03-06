@@ -1,7 +1,52 @@
+:root {
+  --base-size: 0.75rem; /* Tamaño base (puedes ajustarlo) */
+  --scale-factor: 1; /* Factor de escala (puedes ajustarlo) */
+
+  --size-xs: calc(var(--base-size) / var(--scale-factor));
+  --size-sm: calc(var(--base-size) * 0.8);
+  --size-md: var(--base-size);
+  --size-lg: calc(var(--base-size) * var(--scale-factor));
+  --size-xl: calc(var(--base-size) * var(--scale-factor) * var(--scale-factor));
+}
+
 body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-weight: normal;
   font-family: 'Poppins', sans-serif;
+  font-size: var(--base-size);
+  scale: var(--scale-factor);
+}
+
+@layer utilities {
+  @theme {
+    --base-size: 1rem;
+    --scale-factor: 1;
+    --size-xs: calc(var(--base-size) / var(--scale-factor));
+    --size-sm: calc(var(--base-size) * 0.8);
+    --size-md: var(--base-size);
+    --size-lg: calc(var(--base-size) * var(--scale-factor));
+    --size-xl: calc(var(--base-size) * var(--scale-factor) * var(--scale-factor));
+  }
+
+  .text-xs {
+    font-size: var(--size-xs);
+  }
+  .text-sm {
+    font-size: var(--size-sm);
+  }
+  .text-md {
+    font-size: var(--size-md);
+  }
+  .text-lg {
+    font-size: var(--size-lg);
+  }
+  .text-xl {
+    font-size: var(--size-xl);
+  }
+  .p-xs {
+    padding: var(--size-xs);
+  }
+  /* y sigue agregando las otras clases necesarias */
 }

@@ -15,7 +15,7 @@
       />
 
       <!-- Page Content -->
-      <div class="page-content p-4 md:p-6 bg-slate-50 dark:bg-slate-900 flex-1 overflow-y-auto">
+      <div class="page-content p-3 md:p-6 bg-slate-50 dark:bg-slate-900 flex-1 overflow-y-auto">
         <RouterView />
       </div>
 
