@@ -12,6 +12,7 @@
         @toggle-sidebar="toggleSidebar"
         @toggle-theme="toggleTheme"
         @toggle-user-menu="toggleUserMenu"
+        @close-user-menu="closeUserMenu"
       />
 
       <!-- Page Content -->
@@ -87,6 +88,10 @@ const toggleTheme = () => {
   } else {
     document.documentElement.classList.remove('dark');
   }
+};
+
+const closeUserMenu = () => {
+  isUserMenuOpen.value = false;
 };
 
 const handleClickOutside = (event: MouseEvent) => {

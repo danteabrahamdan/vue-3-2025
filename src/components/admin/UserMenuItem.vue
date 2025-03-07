@@ -23,6 +23,8 @@ interface Props {
 
 const props = defineProps<Props>();
 
+const emit = defineEmits(['select']);
+
 const handleClick = (event: MouseEvent) => {
   if (props.action) {
     event.preventDefault();
@@ -30,6 +32,9 @@ const handleClick = (event: MouseEvent) => {
   } else if (!props.to) {
     event.preventDefault();
   }
+
+  // Emitir evento de selección para cerrar el menú
+  emit('select');
 };
 </script>
 

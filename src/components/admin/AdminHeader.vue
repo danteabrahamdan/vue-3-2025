@@ -23,7 +23,7 @@
     <!-- Right Section -->
     <div class="flex items-center space-x-3">
       <!-- User Profile -->
-      <div class="user-profile relative">
+      <div class="user-profile relative" ref="userMenuRef">
         <button class="flex items-center" @click="$emit('toggle-user-menu')">
           <img
             src="https://randomuser.me/api/portraits/men/32.jpg"
@@ -48,6 +48,7 @@
             :label="item.label"
             :to="item.to"
             :action="item.action"
+            @select="$emit('close-user-menu')"
           />
         </div>
       </div>
@@ -56,12 +57,22 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, ref } from 'vue';
 import UserMenuItem from './UserMenuItem.vue';
 import { useUserStore } from '@/stores/UserStore';
 import { useRouter } from 'vue-router';
 import { useConfirm } from 'primevue';
 import http from '@/services/ClientHttp';
+import { onMounted } from 'vue';
+import { onUnmounted } from 'vue';
+
+interface Props {
+  isDark: boolean;
+  isUserMenuOpen: boolean;
+}
+
+const props = defineProps<Props>();
+const emit = defineEmits(['toggle-sidebar', 'toggle-theme', 'toggle-user-menu', 'close-user-menu']);
 
 const userStore = useUserStore();
 
@@ -69,13 +80,7 @@ const router = useRouter();
 
 const confirm = useConfirm();
 
-interface Props {
-  isDark: boolean;
-  isUserMenuOpen: boolean;
-}
-
-defineProps<Props>();
-defineEmits(['toggle-sidebar', 'toggle-theme', 'toggle-user-menu']);
+const userMenuRef = ref<HTMLElement | null>(null);
 
 const handleLogout = () => {
   confirm.require({
@@ -106,6 +111,26 @@ const userMenuItems = [
   { icon: 'pi pi-cog', label: 'Settings', to: '/admin/settings' },
   { icon: 'pi pi-sign-out', label: 'Logout', action: handleLogout }
 ];
+
+// Función para detectar clics fuera del menú
+const handleClickOutside = (event: MouseEvent) => {
+  if (
+    userMenuRef.value &&
+    !userMenuRef.value.contains(event.target as Node) &&
+    props.isUserMenuOpen
+  ) {
+    emit('close-user-menu');
+  }
+};
+
+// Agregar y eliminar el detector de eventos al montar/desmontar el componente
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
 </script>
 
 <style scoped>
