@@ -30,7 +30,9 @@
             alt="User"
             class="w-8 h-8 rounded-full object-cover border-2 border-white"
           />
-          <span class="ml-2 hidden md:inline">Albert Flores</span>
+          <span class="ml-2 hidden md:inline">
+            {{ userStore.user?.fullName }}
+          </span>
           <span class="pi pi-angle-down ml-1 h-4 w-4"></span>
         </button>
 
@@ -44,6 +46,8 @@
             :key="item.label"
             :icon="item.icon"
             :label="item.label"
+            :to="item.to"
+            :action="item.action"
           />
         </div>
       </div>
@@ -52,27 +56,56 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
-import UserMenuItem from './UserMenuItem.vue'
+import { defineProps, defineEmits } from 'vue';
+import UserMenuItem from './UserMenuItem.vue';
+import { useUserStore } from '@/stores/UserStore';
+import { useRouter } from 'vue-router';
+import { useConfirm } from 'primevue';
+import http from '@/services/ClientHttp';
+
+const userStore = useUserStore();
+
+const router = useRouter();
+
+const confirm = useConfirm();
 
 interface Props {
-  isDark: boolean
-  isUserMenuOpen: boolean
+  isDark: boolean;
+  isUserMenuOpen: boolean;
 }
 
-defineProps<Props>()
-defineEmits(['toggle-sidebar', 'toggle-theme', 'toggle-user-menu'])
+defineProps<Props>();
+defineEmits(['toggle-sidebar', 'toggle-theme', 'toggle-user-menu']);
+
+const handleLogout = () => {
+  confirm.require({
+    message: 'Confirm logout process',
+    header: 'Logout',
+    icon: 'pi pi-exclamation-triangle',
+    rejectProps: {
+      label: 'Cancel',
+      severity: 'secondary',
+      outlined: true
+    },
+    acceptProps: { label: 'Yes' },
+    accept: async () => {
+      try {
+        await http.post('/authentication/logout');
+        userStore.clearUserData();
+        router.push({ name: 'Login' });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  });
+};
 
 const userMenuItems = [
-  { icon: 'pi pi-user', label: 'Profile' },
-  { icon: 'pi pi-comment', label: 'Chat' },
-  { icon: 'pi pi-envelope', label: 'Email' },
-  { icon: 'pi pi-check-square', label: 'Todo' },
-  { icon: 'pi pi-cog', label: 'Settings' },
-  { icon: 'pi pi-money-bill', label: 'Price' },
-  { icon: 'pi pi-circle-off', label: 'Faq' },
-  { icon: 'pi pi-sign-out', label: 'Logout' }
-]
+  { icon: 'pi pi-home', label: 'Home', to: '/' },
+  { icon: 'pi pi-user', label: 'Profile', to: '/admin/profile' },
+  { icon: 'pi pi-cog', label: 'Settings', to: '/admin/settings' },
+  { icon: 'pi pi-sign-out', label: 'Logout', action: handleLogout }
+];
 </script>
 
 <style scoped>

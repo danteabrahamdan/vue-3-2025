@@ -5,6 +5,7 @@ import LoginView from '../views/auth/LoginView.vue';
 import RegisterView from '../views/auth/RegisterView.vue';
 import ContactView from '../views/landing/ContactView.vue';
 import AboutView from '../views/landing/AboutView.vue';
+import { authGuard } from './authGuard';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,7 @@ const router = createRouter({
     },
     {
       path: '/admin',
+      beforeEnter: authGuard,
       component: AdminView,
       children: [
         {
@@ -62,18 +64,27 @@ const router = createRouter({
           path: 'settings',
           name: 'Settings',
           component: () => import('../views/admin/SettingView.vue')
+        },
+        {
+          path: 'profile',
+          name: 'Profile',
+          component: () => import('../views/admin/ProfileView.vue')
         }
       ]
     },
     {
       path: '/login',
-      name: 'login',
+      name: 'Login',
       component: LoginView
     },
     {
       path: '/register',
-      name: 'register',
+      name: 'Register',
       component: RegisterView
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/'
     }
   ]
 });

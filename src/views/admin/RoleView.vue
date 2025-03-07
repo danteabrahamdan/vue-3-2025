@@ -1,3 +1,5 @@
 <template>
-  <h1 class="text-2xl font-semibold mb-6 text-slate-800 dark:text-white">Role Page</h1>
+  <div class="bg-white rounded-lg overflow-hidden p-4">
+    <h1 class="text-lg font-semibold mb-4 ml-4 text-slate-800 dark:text-white">Role works</h1>
+  </div>
 </template>

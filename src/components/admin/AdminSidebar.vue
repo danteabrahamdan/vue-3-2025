@@ -18,45 +18,46 @@
       </button>
     </div>
 
-    <scroll-bar>
-      <!-- Navigation Menu -->
-      <div class="sidebar-content overflow-y-auto h-[calc(100%-60px)]">
-        <!-- Home Section -->
-        <nav-section title="Home" :items="menuItems" @select-item="$emit('close')" />
+    <!-- Navigation Menu -->
+    <div class="sidebar-content overflow-y-auto h-[calc(100%-60px)]">
+      <!-- Home Section -->
+      <nav-section title="Home" :items="menuItems" @select-item="$emit('close')" />
 
-        <!-- Options Section -->
-        <nav-section title="Options" :items="appsItems" @select-item="$emit('close')" />
+      <!-- Options Section -->
+      <nav-section title="Options" :items="appsItems" @select-item="$emit('close')" />
 
-        <!-- Home Section -->
-        <nav-section title="Settings" :items="settingItems" @select-item="$emit('close')" />
-
-        <!-- PAGES Section -->
-        <nav-section
-          title="PAGES"
-          :items="pagesItems"
-          :active-submenu="activeSubmenu"
-          @toggle-submenu="toggleSubmenu"
-          @select-item="$emit('close')"
-        />
-      </div>
-    </scroll-bar>
+      <!-- Home Section -->
+      <nav-section title="Settings" :items="settingItems" @select-item="$emit('close')" />
+    </div>
   </aside>
+
+  <pConfirmDialog></pConfirmDialog>
 </template>
 
 <script setup lang="ts">
 import { ref, defineEmits, defineProps } from 'vue';
 import NavSection from './NavSection.vue';
-import ScrollBar from '@/components/shared/ScrollBar.vue';
+import { useUserStore } from '@/stores/UserStore';
+import http from '@/services/ClientHttp';
+import { useRouter } from 'vue-router';
+import { useConfirm } from 'primevue';
 
 interface Props {
   isOpen: boolean;
 }
 
 defineProps<Props>();
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const emit = defineEmits(['close']);
 
 const activeSubmenu = ref('utility');
+
+const userStore = useUserStore();
+
+const router = useRouter();
+
+const confirm = useConfirm();
 
 const menuItems = [
   {
@@ -98,59 +99,41 @@ const settingItems = [
     to: '/admin/settings'
   },
   {
+    icon: 'pi pi-user',
+    label: 'Profile',
+    hasArrow: false,
+    to: '/admin/profile'
+  },
+  {
     icon: 'pi pi-sign-out',
     label: 'Logout',
     hasArrow: false,
-    action: () => console.log('Changelog clicked')
+    action: async () => {
+      confirm.require({
+        message: 'Confirm logout process',
+        header: 'Logout',
+        icon: 'pi pi-exclamation-triangle',
+        rejectProps: {
+          label: 'Cancel',
+          severity: 'secondary',
+          outlined: true
+        },
+        acceptProps: { label: 'Yes' },
+        accept: async () => {
+          try {
+            await http.post('/authentication/logout');
+            userStore.clearUserData();
+            router.push({ name: 'Login' });
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      });
+    }
   }
 ];
 
-const pagesItems = [
-  {
-    icon: 'pi pi-lock',
-    label: 'Authentication',
-    hasArrow: false,
-    action: () => console.log('Auth clicked')
-  },
-  {
-    icon: 'pi pi-user',
-    label: 'Utility',
-    id: 'utility',
-    hasSubmenu: true,
-    submenuItems: [
-      {
-        label: 'Invoice',
-        to: '/invoice'
-      },
-      {
-        label: 'Pricing',
-        to: '/pricing'
-      },
-      {
-        label: 'Testimonial',
-        to: '/testimonial'
-      },
-      {
-        label: 'FAQ',
-        to: '/faq'
-      },
-      {
-        label: 'Blog',
-        to: '/blog'
-      },
-      {
-        label: 'Blank Page',
-        to: '/blank-page',
-        active: true
-      },
-      {
-        label: 'Profile',
-        to: '/profile'
-      }
-    ]
-  }
-];
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const toggleSubmenu = (id: string) => {
   activeSubmenu.value = activeSubmenu.value === id ? '' : id;
 };
