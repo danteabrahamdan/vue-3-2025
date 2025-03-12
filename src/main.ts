@@ -21,6 +21,7 @@ import ToggleSwitch from 'primevue/toggleswitch';
 import Select from 'primevue/select';
 import Fluid from 'primevue/fluid';
 import ConfirmDialog from 'primevue/confirmdialog';
+import Dialog from 'primevue/dialog';
 
 const app = createApp(App);
 
@@ -49,5 +50,6 @@ app.component('pToggleSwitch', ToggleSwitch);
 app.component('pSelect', Select);
 app.component('pFluid', Fluid);
 app.component('pConfirmDialog', ConfirmDialog);
+app.component('pDialog', Dialog);
 
 app.mount('#app');

@@ -3,12 +3,16 @@ import http from '@/services/ClientHttp';
 import { ref, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import PaginationTable from '@/components/admin/PaginationTable.vue';
+import { useConfirm, useToast } from 'primevue';
+import EditProduct from '@/components/admin/EditProduct.vue';
 
 const products = ref([]);
 const totalCount = ref(0);
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
 const searchTerm = ref('');
+const toast = useToast();
+const confirm = useConfirm();
 
 const getPaginatedProducts = async () => {
   try {
@@ -33,6 +37,51 @@ const handlePageChange = (page: number) => {
 };
 
 onMounted(getPaginatedProducts);
+
+const deleteProduct = async (productId: number) => {
+  confirm.require({
+    message: 'Do you want to delete this record?',
+    header: 'Danger Zone',
+    icon: 'pi pi-info-circle',
+    rejectLabel: 'Cancel',
+    rejectProps: {
+      label: 'Cancel',
+      severity: 'secondary',
+      outlined: true
+    },
+    acceptProps: {
+      label: 'Delete',
+      severity: 'danger'
+    },
+    accept: async () => {
+      try {
+        await http.delete(`/product/${productId}`);
+        getPaginatedProducts();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.response.data.message,
+          life: 4000
+        });
+      }
+    }
+  });
+};
+
+const search = () => {
+  getPaginatedProducts();
+};
+
+const selectedProduct = ref(null);
+const editModal = ref(false);
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleEditProduct = (product: any) => {
+  selectedProduct.value = product;
+  editModal.value = true;
+};
 </script>
 
 <template>
@@ -43,16 +92,15 @@ onMounted(getPaginatedProducts);
       <template #header>
         <div class="flex justify-between">
           <RouterLink :to="{ name: 'Add product' }">
-            <pButton type="button" icon="pi pi-plus" label="Add product" outlined />
+            <pButton type="button" icon="pi pi-plus" label="Add product" outlined size="small" />
           </RouterLink>
 
-          <pIconField>
-            <pInputIcon>
-              <i class="pi pi-search" />
-            </pInputIcon>
-
-            <pInputText placeholder="Search" />
-          </pIconField>
+          <pInputText
+            placeholder="Search"
+            size="small"
+            v-model="searchTerm"
+            @keyup.enter="search"
+          />
         </div>
       </template>
 
@@ -104,8 +152,22 @@ onMounted(getPaginatedProducts);
       <pColumn header="Actions">
         <!-- eslint-disable-next-line vue/no-unused-vars -->
         <template #body="slotProps">
-          <pButton icon="pi pi-pencil" class="mr-1" rounded variant="text" size="small" />
-          <pButton icon="pi pi-trash" rounded variant="text" size="small" />
+          <pButton
+            icon="pi pi-pencil"
+            class="mr-1"
+            rounded
+            variant="text"
+            size="small"
+            @click="handleEditProduct(slotProps.data)"
+          />
+
+          <pButton
+            icon="pi pi-trash"
+            rounded
+            variant="text"
+            size="small"
+            @click="deleteProduct(slotProps.data.id)"
+          />
         </template>
       </pColumn>
 
@@ -118,4 +180,12 @@ onMounted(getPaginatedProducts);
       </template>
     </pDataTable>
   </div>
+
+  <pConfirmDialog></pConfirmDialog>
+
+  <EditProduct
+    v-model:visible="editModal"
+    :product="selectedProduct || undefined"
+    @close="editModal = false"
+  />
 </template>
