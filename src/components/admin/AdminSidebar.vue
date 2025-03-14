@@ -30,8 +30,6 @@
       <nav-section title="Settings" :items="settingItems" @select-item="$emit('close')" />
     </div>
   </aside>
-
-  <pConfirmDialog></pConfirmDialog>
 </template>
 
 <script setup lang="ts">

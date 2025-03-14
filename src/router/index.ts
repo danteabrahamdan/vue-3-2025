@@ -5,7 +5,7 @@ import LoginView from '../views/auth/LoginView.vue';
 import RegisterView from '../views/auth/RegisterView.vue';
 import ContactView from '../views/landing/ContactView.vue';
 import AboutView from '../views/landing/AboutView.vue';
-import { authGuard } from './authGuard';
+import { alreadyLogin, authGuard } from './authGuard';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -75,11 +75,13 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Login',
+      beforeEnter: alreadyLogin,
       component: LoginView
     },
     {
       path: '/register',
       name: 'Register',
+      beforeEnter: alreadyLogin,
       component: RegisterView
     },
     {

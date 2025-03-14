@@ -12,4 +12,6 @@ onMounted(() => {
 
 <template>
   <RouterView />
+
+  <pConfirmDialog></pConfirmDialog>
 </template>

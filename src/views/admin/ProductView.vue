@@ -181,11 +181,11 @@ const handleEditProduct = (product: any) => {
     </pDataTable>
   </div>
 
-  <pConfirmDialog></pConfirmDialog>
-
   <EditProduct
+    v-if="editModal"
     v-model:visible="editModal"
     :product="selectedProduct || undefined"
     @close="editModal = false"
+    @product-updated="getPaginatedProducts"
   />
 </template>
